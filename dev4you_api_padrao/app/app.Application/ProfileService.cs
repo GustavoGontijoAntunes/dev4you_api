@@ -1,0 +1,76 @@
+﻿using app.Domain.Exceptions;
+using app.Domain.Extensions;
+using app.Domain.Models.Filters;
+using app.Domain.Models;
+using app.Domain.Repositories;
+using app.Domain.Resources;
+using app.Domain.Services;
+
+namespace app.Application
+{
+    public class ProfileService : IProfileService
+    {
+        private readonly IProfileRepository _profileRepository;
+
+        public ProfileService(IProfileRepository profileRepository)
+        {
+            _profileRepository = profileRepository;
+        }
+
+        public PagedList<Profile> GetAll(ProfileSearch search)
+        {
+            return _profileRepository.GetAll(search);
+        }
+
+        public Profile GetByName(string name)
+        {
+            return _profileRepository.GetByName(name);
+        }
+
+        public Profile GetById(long id)
+        {
+            return _profileRepository.GetById(id);
+        }
+
+        public async Task Add(Profile profile)
+        {
+            var profileAlreadyExsists = GetByName(profile.Name);
+
+            if (profileAlreadyExsists != null)
+            {
+                throw new DomainException(string.Format(CustomMessages.ProfileAlreadyExists, profile.Name));
+            }
+
+            await _profileRepository.Add(profile);
+        }
+
+        public async Task Update(Profile profile)
+        {
+            var existingProfile = GetById(profile.Id);
+
+            if (existingProfile == null)
+            {
+                throw new DomainException(CustomMessages.ProfileIdNotExists);
+            }
+
+            await _profileRepository.Update(profile);
+        }
+
+        public void DeleteById(long id)
+        {
+            var isAlreadyUsed = IsUsedInSomeUser(id);
+
+            if (isAlreadyUsed)
+            {
+                throw new DomainException(CustomMessages.ProfileCantBeDeleted);
+            }
+
+            _profileRepository.DeleteById(id);
+        }
+
+        private bool IsUsedInSomeUser(long id)
+        {
+            return _profileRepository.IsUsedInSomeUser(id);
+        }
+    }
+}

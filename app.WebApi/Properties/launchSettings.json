@@ -10,7 +10,7 @@
       "dotnetRunMessages": true,
       "applicationUrl": "http://localhost:5252"
     },
-    "appp": {
+    "dev": {
       "commandName": "Project",
       "launchBrowser": true,
       "launchUrl": "swagger",

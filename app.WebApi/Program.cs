@@ -28,13 +28,14 @@ namespace app.WebApi
                     options.Cookie.SameSite = SameSiteMode.None;
                     options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
                 });
+            builder.Services.AddApiConfiguration();
 
             // Configure Localization
             builder.Services.AddLocalization(options => options.ResourcesPath = "Resources");
             builder.Services.TryAddSingleton(typeof(IStringLocalizerFactory), typeof(ResourceManagerStringLocalizerFactory));
             builder.Services.TryAddSingleton(typeof(IStringLocalizer<>), typeof(StringLocalizer<>));
-
-            builder.Services.AddSwaggerGen();
+            builder.Services.AddSwaggerConfiguration(builder.Configuration.SafeGet<EnvironmentConfiguration>());
+            // builder.Services.AddSwaggerGen();
             builder.Services.AddEndpointsApiExplorer();
 
             // Add Jwt Token Authorization Handler
@@ -78,7 +79,7 @@ namespace app.WebApi
                 app.UseSwagger();
                 app.UseSwaggerUI();
             }
-
+            app.UseApiConfiguration();
             app.UseHttpsRedirection();
             app.UseAuthentication();
             app.UseAuthorization();

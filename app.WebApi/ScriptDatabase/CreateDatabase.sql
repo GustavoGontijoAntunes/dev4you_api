@@ -93,4 +93,4 @@ INSERT INTO `profilePermission` (`profileId`, `permissionId`) VALUES (1, 11);
 INSERT INTO `profilePermission` (`profileId`, `permissionId`) VALUES (1, 12);
 
 INSERT INTO `user` (`id`, `name`, `login`, `password`, `createdDate`, `sessionId`, `profileId`)
-VALUES (1, 'Administrador', 'Admin', 'YWRtaW4xMjN6OTlobFh5T1E4ZVd0OWgwVDdCZFBTc2tIbVpxdjFybQ==', now(), '', 1); -- Password: admin123
+VALUES (1, 'Administrador', 'Admin', '$2a$10$Lwa9rI2zYaO90IpioOBNMOBqikUkABxrqoxz.KHhhPQGvYm6uvFzW', now(), '', 1); -- Password: admin123

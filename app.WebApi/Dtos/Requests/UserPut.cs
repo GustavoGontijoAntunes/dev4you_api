@@ -11,7 +11,7 @@ namespace app.WebApi.Dtos.Requests
         public string? Login { get; set; }
         public string? Password { get; set; }
         public long? ProfileId { get; set; }
-        public DateTime CreatedDate { get; set; } = DateTime.Now;
+        // public DateTime CreatedDate { get; set; } = DateTime.Now;
     }
 
     public class UserPutValidator : AbstractValidator<UserPut>

@@ -10,6 +10,7 @@ using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using BCrypt.Net;
 
 namespace app.Application
 {
@@ -28,37 +29,14 @@ namespace app.Application
         {
             try
             {
-                var result = _userRepository.Login(user.Login, ConvertToEncrypt(user.Password));
+                var userAux = GetByLogin(user.Login);
 
-                if (result)
+                if (userAux == null)
                 {
-                    var userAux = GetByLogin(user.Login);
-
-                    if (userAux == null)
-                    {
-                        throw new DomainException(string.Format(CustomMessages.UserNotExists, user.Login));
-                    }
-
-                    var guid = Guid.NewGuid().ToString();
-                    userAux.SessionId = guid;
-                    userAux.Profile = null; // Tracking error because of circular dependency caused by GenerateToken method
-                    await _userRepository.Update(userAux);
-
-                    var userAux2 = GetByLogin(user.Login);
-                    var tokenAplication = GenerateToken(userAux2);
-
-                    return new UserAuthenticated()
-                    {
-                        Authenticated = true,
-                        Acesstoken = tokenAplication,
-                        Created = DateTime.Now,
-                        Expiration = DateTime.Now.AddMinutes(1440), // 24h
-                        Message = CustomMessages.Authenticated,
-                        SessionId = guid
-                    };
+                    throw new DomainException(string.Format(CustomMessages.UserNotExists, user.Login));
                 }
 
-                else
+                if (!VerifyPassword(user.Password, userAux.Password))
                 {
                     return new UserAuthenticated()
                     {
@@ -70,6 +48,26 @@ namespace app.Application
                         SessionId = null
                     };
                 }
+
+                
+                var guid = Guid.NewGuid().ToString();
+                userAux.SessionId = guid;
+
+                var tokenAplication = GenerateToken(userAux);
+                userAux.Profile = null; // Tracking error because of circular dependency caused by GenerateToken method
+
+                await _userRepository.Update(userAux);
+
+                return new UserAuthenticated()
+                {
+                    Authenticated = true,
+                    Acesstoken = tokenAplication,
+                    Created = DateTime.Now,
+                    Expiration = DateTime.Now.AddMinutes(1440), // 24h
+                    Message = CustomMessages.Authenticated,
+                    SessionId = guid
+                };
+
             }
 
             catch (Exception ex)
@@ -96,7 +94,7 @@ namespace app.Application
         public async Task Add(User user)
         {
             var userAlreadyExsists = GetByLogin(user.Login);
-            user.Password = ConvertToEncrypt(user.Password);
+            user.Password = HashPassword(user.Password);
 
             if (userAlreadyExsists != null)
             {
@@ -110,6 +108,7 @@ namespace app.Application
         {
             var existingUser = GetById(user.Id);
             user.Password = existingUser.Password;
+            user.CreatedDate = existingUser.CreatedDate;
 
             if (existingUser == null)
             {
@@ -122,19 +121,22 @@ namespace app.Application
         public async Task ChangePassword(long id, User user)
         {
             var userExisting = GetById(id);
-            var passwordUserExisting = ConvertToDecrypt(userExisting.Password);
+            // var passwordUserExisting = ConvertToDecrypt(userExisting.Password);
 
-            if (passwordUserExisting != user.Password)
+            if (userExisting == null)
+            {
+                throw new DomainException(CustomMessages.UserIdNotExists);
+            }
+
+            if (!VerifyPassword(user.Password, userExisting.Password))
             {
                 throw new DomainException(CustomMessages.IncorrectPassword);
             }
 
-            else
-            {
-                userExisting.Profile = null; // Tracking error because of circular dependency caused by GetById method
-                userExisting.Password = ConvertToEncrypt(user.NewPassword);
-                await _userRepository.Update(userExisting);
-            }
+            userExisting.Profile = null; // Tracking error because of circular dependency caused by GetById method
+            userExisting.Password = HashPassword(user.NewPassword);
+            await _userRepository.Update(userExisting);
+
         }
 
         public void DeleteById(long id)
@@ -142,31 +144,14 @@ namespace app.Application
             _userRepository.DeleteById(id);
         }
 
-        private string ConvertToEncrypt(string password)
+        static string HashPassword(string password)
         {
-            if (string.IsNullOrEmpty(password))
-            {
-                return "";
-            }
-
-            password += _jwtOptions.SecretKey;
-            var passwordBytes = Encoding.UTF8.GetBytes(password);
-
-            return Convert.ToBase64String(passwordBytes);
+            return BCrypt.Net.BCrypt.HashPassword(password);
         }
 
-        private string ConvertToDecrypt(string base64EncodeData)
+        static bool VerifyPassword(string password, string hashedPassword)
         {
-            if (string.IsNullOrEmpty(base64EncodeData))
-            {
-                return "";
-            }
-
-            var base64EncodeBytes = Convert.FromBase64String(base64EncodeData);
-            var result = Encoding.UTF8.GetString(base64EncodeBytes);
-            result = result.Substring(0, result.Length - _jwtOptions.SecretKey.Length);
-
-            return result;
+            return BCrypt.Net.BCrypt.Verify(password, hashedPassword);
         }
 
         private string GenerateToken(User user)

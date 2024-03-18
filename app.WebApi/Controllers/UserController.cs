@@ -25,12 +25,12 @@ namespace app.WebApi.Controllers
         /// Sign up in app.
         /// </summary>
         /// <param name="userPost">User post</param>
-        [HttpPost("signUp")]
+        [HttpPost]
         [ProducesResponseType(200)]
         [ProducesResponseType(typeof(BadRequestResult), 400)]
         [ProducesResponseType(500)]
         [Authorize(Roles = "POST_USER")]
-        public async Task SignUp([FromBody] UserPost userPost)
+        public async Task Post([FromBody] UserPost userPost)
         {
             var user = _mapper.Map<User>(userPost);
             await _userService.Add(user);

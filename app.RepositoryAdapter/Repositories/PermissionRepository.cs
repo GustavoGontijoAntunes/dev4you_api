@@ -35,18 +35,6 @@ namespace app.RepositoryAdapter.Repositories
             return query.FirstOrDefault(x => x.Id == id);
         }
 
-        public async Task Add(Permission permission)
-        {
-            Repository.Add(permission);
-            await SaveChangesAsync();
-        }
-
-        public async Task Update(Permission permission)
-        {
-            Repository.Update(permission);
-            await SaveChangesAsync();
-        }
-
         public async Task AddOrUpdateRange(List<Permission> permissions)
         {
             Repository.UpdateRange(permissions);

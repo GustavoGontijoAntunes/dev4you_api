@@ -4,16 +4,11 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace app.RepositoryAdapter.Mapppings
 {
-    public class ProfileMap : IEntityTypeConfiguration<Profile>
+    public class ProfileMap : EntityMappingBase<Profile>
     {
-        public void Configure(EntityTypeBuilder<Profile> builder)
+        public override void Configure(EntityTypeBuilder<Profile> builder)
         {
             builder.ToTable("profile");
-
-            builder.HasKey(x => x.Id);
-            builder.Property(x => x.Id)
-                .HasColumnName("Id")
-                .ValueGeneratedOnAdd();
 
             builder.Property(x => x.Name);
 

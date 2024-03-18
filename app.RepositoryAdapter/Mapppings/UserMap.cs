@@ -4,21 +4,18 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace app.RepositoryAdapter.Mapppings
 {
-    public class UserMap : IEntityTypeConfiguration<User>
+    public class UserMap : EntityMappingBase<User>
     {
-        public void Configure(EntityTypeBuilder<User> builder)
+        public override void Configure(EntityTypeBuilder<User> builder)
         {
-            builder.ToTable("user");
+            base.Configure(builder);
 
-            builder.HasKey(x => x.Id);
-            builder.Property(x => x.Id)
-                .HasColumnName("Id")
-                .ValueGeneratedOnAdd();
+            builder.ToTable("user");
 
             builder.Property(x => x.Name);
             builder.Property(x => x.Login);
             builder.Property(x => x.Password);
-            builder.Property(x => x.CreatedDate);
+
             builder.Property(x => x.SessionId);
 
             builder.Ignore(x => x.NewPassword);

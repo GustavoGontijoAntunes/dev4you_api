@@ -57,18 +57,6 @@ namespace app.RepositoryAdapter.Repositories
             return query.FirstOrDefault(x => x.Id == id);
         }
 
-        public async Task Add(User user)
-        {
-            Repository.Add(user);
-            await SaveChangesAsync();
-        }
-
-        public async Task Update(User user)
-        {
-            Repository.Update(user);
-            await SaveChangesAsync();
-        }
-
         public void DeleteById(long id)
         {
             var user = Repository.AsNoTracking().AsQueryable().FirstOrDefault(x => x.Id == id);

@@ -6,6 +6,8 @@ DROP TABLE IF EXISTS `profile`;
 CREATE TABLE `profile` (
   `id` int NOT NULL AUTO_INCREMENT,
   `name` varchar(50) NOT NULL,
+  `createdDate` datetime NOT NULL default now(),
+  `updatedDate` datetime NOT NULL default now(),
   PRIMARY KEY (`id`),
   UNIQUE KEY `permission_name_unique` (`name`)
 ) ENGINE=InnoDB;
@@ -16,7 +18,8 @@ CREATE TABLE `user` (
   `name` varchar(100) NOT NULL,
   `login` varchar(20) NOT NULL,
   `password` varchar(200) NOT NULL,
-  `createdDate` datetime NOT NULL,
+  `createdDate` datetime NOT NULL default now(),
+  `updatedDate` datetime NOT NULL default now(),
   `sessionId` varchar(200) NULL,
   `profileId` int NOT NULL,
   PRIMARY KEY (`id`),
@@ -29,6 +32,8 @@ CREATE TABLE `permission` (
   `id` int NOT NULL AUTO_INCREMENT,
   `name` varchar(50) NOT NULL,
   `description` varchar(200) NOT NULL,
+  `createdDate` datetime NOT NULL default now(),
+  `updatedDate` datetime NOT NULL default now(),
   PRIMARY KEY (`id`),
   UNIQUE KEY `permission_name_unique` (`name`)
 ) ENGINE=InnoDB;
@@ -36,6 +41,8 @@ CREATE TABLE `permission` (
 DROP TABLE IF EXISTS `profilePermission`;
 CREATE TABLE `profilePermission` (
   `id` int NOT NULL AUTO_INCREMENT,
+  `createdDate` datetime NOT NULL default now(),
+  `updatedDate` datetime NOT NULL default now(),
   `profileId` int NOT NULL,
   `permissionId` int NOT NULL,
   PRIMARY KEY (`id`),
@@ -86,4 +93,4 @@ INSERT INTO `profilePermission` (`profileId`, `permissionId`) VALUES (1, 11);
 INSERT INTO `profilePermission` (`profileId`, `permissionId`) VALUES (1, 12);
 
 INSERT INTO `user` (`id`, `name`, `login`, `password`, `createdDate`, `sessionId`, `profileId`)
-VALUES (1, 'Administrador', 'Admin', 'YWRtaW4xMjN6OTlobFh5T1E4ZVd0OWgwVDdCZFBTc2tIbVpxdjFybQ==', '2024-03-15', '', 1); -- Password: admin123
+VALUES (1, 'Administrador', 'Admin', 'YWRtaW4xMjN6OTlobFh5T1E4ZVd0OWgwVDdCZFBTc2tIbVpxdjFybQ==', now(), '', 1); -- Password: admin123

@@ -11,7 +11,6 @@ namespace app.Domain.Models.Authentication
         public string Login { get; set; }
         public string Password { get; set; }
         public virtual string NewPassword { get; set; }
-        public DateTime CreatedDate { get; set; }
         public virtual string? Token { get; set; }
         public string? SessionId { get; set; }
         public long ProfileId { get; set; }

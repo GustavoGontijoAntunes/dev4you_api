@@ -45,18 +45,6 @@ namespace app.RepositoryAdapter.Repositories
             return query.FirstOrDefault(x => x.Id == id);
         }
 
-        public async Task Add(Profile profile)
-        {
-            Repository.Add(profile);
-            await SaveChangesAsync();
-        }
-
-        public async Task Update(Profile profile)
-        {
-            Repository.Update(profile);
-            await SaveChangesAsync();
-        }
-
         public void DeleteById(long id)
         {
             var profile = Repository.AsNoTracking().AsQueryable().FirstOrDefault(x => x.Id == id);

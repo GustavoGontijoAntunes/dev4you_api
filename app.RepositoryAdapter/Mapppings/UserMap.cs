@@ -1,15 +1,14 @@
-﻿using app.Domain.Models.Authentication;
+﻿using app.Domain.Models;
+using app.Domain.Models.Authentication;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace app.RepositoryAdapter.Mapppings
 {
-    public class UserMap : EntityMappingBase<User>
+    public class UserMap : IEntityTypeConfiguration<User>
     {
-        public override void Configure(EntityTypeBuilder<User> builder)
+        public void Configure(EntityTypeBuilder<User> builder)
         {
-            base.Configure(builder);
-
             builder.ToTable("user");
 
             builder.Property(x => x.Name);

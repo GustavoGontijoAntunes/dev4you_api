@@ -1,7 +1,8 @@
 ﻿namespace app.WebApi.Dtos.Results
 {
-    public class UserResult : BaseResult
+    public class UserResult
     {
+        public long Id { get; set; }
         public string? Name { get; set; }
         public string? Login { get; set; }
         public string SessionId { get; set; }

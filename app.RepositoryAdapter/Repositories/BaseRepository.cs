@@ -27,17 +27,12 @@ namespace app.RepositoryAdapter.Repositories
 
         public async Task<bool> Add(TEntity entity)
         {
-            entity.CreatedDate = DateTime.Now;
-            entity.UpdatedDate = DateTime.Now;
-
             Repository.Add(entity);
             return await SaveChangesAsync();
         }
 
         public async Task<bool> Update(TEntity entity)
         {
-            entity.UpdatedDate = DateTime.Now;
-
             Repository.Update(entity);
             return await SaveChangesAsync();
         }

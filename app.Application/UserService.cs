@@ -108,7 +108,6 @@ namespace app.Application
         {
             var existingUser = GetById(user.Id);
             user.Password = existingUser.Password;
-            user.CreatedDate = existingUser.CreatedDate;
 
             if (existingUser == null)
             {

@@ -4,11 +4,16 @@ using Microsoft.EntityFrameworkCore;
 
 namespace app.RepositoryAdapter.Mapppings
 {
-    public class PermissionProfileMap : EntityMappingBase<ProfilePermission>
+    public class PermissionProfileMap : IEntityTypeConfiguration<ProfilePermission>
     {
-        public override void Configure(EntityTypeBuilder<ProfilePermission> builder)
+        public void Configure(EntityTypeBuilder<ProfilePermission> builder)
         {
             builder.ToTable("profilePermission");
+
+            builder.HasKey(x => x.Id);
+            builder.Property(x => x.Id)
+                .HasColumnName("Id")
+                .ValueGeneratedOnAdd();
         }
     }
 }

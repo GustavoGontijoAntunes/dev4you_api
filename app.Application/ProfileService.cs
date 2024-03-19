@@ -19,6 +19,7 @@ namespace app.Application
 
         public PagedList<Profile> GetAll(ProfileSearch search)
         {
+            search.ThrowIfNotValid();
             return _profileRepository.GetAll(search);
         }
 
@@ -34,6 +35,7 @@ namespace app.Application
 
         public async Task Add(Profile profile)
         {
+            profile.ThrowIfNotValid();
             var profileAlreadyExsists = GetByName(profile.Name);
 
             if (profileAlreadyExsists != null)
@@ -46,6 +48,7 @@ namespace app.Application
 
         public async Task Update(Profile profile)
         {
+            profile.ThrowIfNotValid();
             var existingProfile = GetById(profile.Id);
 
             if (existingProfile == null)

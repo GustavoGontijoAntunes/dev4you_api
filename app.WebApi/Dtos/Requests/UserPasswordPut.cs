@@ -4,7 +4,7 @@ using Microsoft.Extensions.Localization;
 
 namespace app.WebApi.Dtos.Requests
 {
-    public class UserPasswordPut
+    public class UserPasswordPut : BaseModelRequest
     {
         public long? Id { get; set; }
         public string? OldPassword { get; set; }

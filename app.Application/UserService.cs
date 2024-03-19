@@ -10,7 +10,6 @@ using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-using BCrypt.Net;
 
 namespace app.Application
 {
@@ -78,6 +77,7 @@ namespace app.Application
 
         public PagedList<User> GetAll(UserSearch search)
         {
+            search.ThrowIfNotValid();
             return _userRepository.GetAll(search);
         }
 
@@ -93,6 +93,7 @@ namespace app.Application
 
         public async Task Add(User user)
         {
+            user.ThrowIfNotValid();
             var userAlreadyExsists = GetByLogin(user.Login);
             user.Password = HashPassword(user.Password);
 
@@ -106,6 +107,7 @@ namespace app.Application
 
         public async Task Update(User user)
         {
+            user.ThrowIfNotValid();
             var existingUser = GetById(user.Id);
             user.Password = existingUser.Password;
 
@@ -119,8 +121,8 @@ namespace app.Application
 
         public async Task ChangePassword(long id, User user)
         {
+            user.ThrowIfNotValid();
             var userExisting = GetById(id);
-            // var passwordUserExisting = ConvertToDecrypt(userExisting.Password);
 
             if (userExisting == null)
             {

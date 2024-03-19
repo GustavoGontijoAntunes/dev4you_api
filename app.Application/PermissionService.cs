@@ -37,7 +37,8 @@ namespace app.Application
         }
 
         public async Task Add(Permission permission)
-        {          
+        {
+            permission.ThrowIfNotValid();
             var permissionAlreadyExsists = GetByName(permission.Name);
 
             if (permissionAlreadyExsists != null)
@@ -50,6 +51,7 @@ namespace app.Application
 
         public async Task Update(Permission permission)
         {
+            permission.ThrowIfNotValid();
             var existingPermission = GetById(permission.Id);
 
             if (existingPermission == null)
@@ -64,6 +66,7 @@ namespace app.Application
         {
             foreach (var item in permissions)
             {
+                item.ThrowIfNotValid();
                 var permissionAlreadyExsists = GetByName(item.Name);
 
                 if (permissionAlreadyExsists != null)

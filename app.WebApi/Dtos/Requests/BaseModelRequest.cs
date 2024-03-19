@@ -1,13 +1,11 @@
 ﻿using app.Domain.Exceptions;
 using FluentValidation.Results;
 
-namespace app.Domain.Models.Base
+namespace app.WebApi.Dtos.Requests
 {
-    public abstract class BaseModel
+    public class BaseModelRequest
     {
-        protected BaseModel() { }
-
-        public long Id { get; set; }
+        public BaseModelRequest() { }
         protected ValidationResult ValidationResult { get; set; }
 
         protected virtual bool IsValid()

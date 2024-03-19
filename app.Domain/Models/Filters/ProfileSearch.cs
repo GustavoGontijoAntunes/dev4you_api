@@ -1,4 +1,5 @@
 ﻿using app.Domain.Extensions;
+using app.Domain.Resources;
 using FluentValidation;
 
 namespace app.Domain.Models.Filters
@@ -18,7 +19,7 @@ namespace app.Domain.Models.Filters
     {
         public ProfileSearchValidation()
         {
-
+            RuleFor(x => x.Name).MaximumLength(100).WithMessage(CustomMessages.ProfileNameMaxLength);
         }
     }
 }

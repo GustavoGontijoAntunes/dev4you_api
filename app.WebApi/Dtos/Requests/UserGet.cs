@@ -1,8 +1,4 @@
-﻿using app.Domain.Resources;
-using FluentValidation;
-using Microsoft.Extensions.Localization;
-
-namespace app.WebApi.Dtos.Requests
+﻿namespace app.WebApi.Dtos.Requests
 {
     public class UserGet : Filter
     {
@@ -20,13 +16,5 @@ namespace app.WebApi.Dtos.Requests
         /// User profile id
         /// </summary>
         public long? ProfileId { get; set; }
-    }
-
-    public class UserGetValidator : AbstractValidator<UserGet>
-    {
-        public UserGetValidator(IStringLocalizer<CustomMessages> localizer)
-        {
-
-        }
     }
 }
